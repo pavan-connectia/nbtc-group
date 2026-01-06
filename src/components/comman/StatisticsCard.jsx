@@ -1,92 +1,68 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-/**
- * Extracts:
- * numberPart: 400 / 4.5 / 102410
- * suffixPart: " Million" / " Billion USD" / " Ton"
- */
-const splitNumberAndSuffix = (value = "") => {
-  const match = value.match(/^([\d.]+)\s*(.*)$/);
-  if (!match) return { numberPart: 0, suffixPart: "" };
-
-  return {
-    numberPart: parseFloat(match[1]),
-    suffixPart: match[2] ? ` ${match[2]}` : "",
-  };
-};
-
 const StatisticsCard = ({ statistic }) => {
   const { i18n } = useTranslation();
   const currentLang = i18n.language === "ar" ? "ar" : "en";
 
-  const { numberPart, suffixPart } = splitNumberAndSuffix(
-    statistic?.number
-  );
-
   const [animatedNumber, setAnimatedNumber] = useState(0);
-  const duration = 6000;
+  const duration = 3000;
+
+  const rawValue = statistic?.number || "";
+
+  const numberMatch = rawValue.match(/\d+(\.\d+)?/);
+
+  const suffix = rawValue.replace(numberMatch ? numberMatch[0] : "", "");
+
+  const totalNumber = numberMatch ? parseFloat(numberMatch[0]) : 0;
 
   useEffect(() => {
-    if (numberPart <= 0) return;
+    if (totalNumber <= 0) {
+      setAnimatedNumber(0);
+      return;
+    }
 
     let startTime;
+    let animationFrameId;
 
     const animateNumber = (timestamp) => {
       if (!startTime) startTime = timestamp;
-
       const elapsed = timestamp - startTime;
-      const progress = Math.min(elapsed / duration, 1);
 
-      const value = progress * numberPart;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+
+      const decimalPlaces = numberMatch?.[0]?.includes(".") ? 1 : 0;
+
       setAnimatedNumber(
-        numberPart % 1 === 0 ? Math.floor(value) : value.toFixed(1)
+        Number((easeOut * totalNumber).toFixed(decimalPlaces))
       );
 
+
       if (progress < 1) {
-        requestAnimationFrame(animateNumber);
+        animationFrameId = requestAnimationFrame(animateNumber);
       }
     };
 
-    requestAnimationFrame(animateNumber);
-  }, [numberPart]);
+    animationFrameId = requestAnimationFrame(animateNumber);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [totalNumber]);
 
   return (
-    <div
-      className="
-        group
-        min-w-[190px]
-        rounded-xl
-        bg-white
-        p-4
-        shadow-sm
-        transition-all
-        duration-300
-        hover:-translate-y-1
-        hover:shadow-lg
-        border-l-4
-        border-red
-      "
-    >
-      <h4
-        className="
-          font-kanit
-          mb-2
-          text-3xl
-          font-bold
-          text-blue
-          transition-colors
-          duration-300
-          group-hover:text-red
-        "
-      >
+    <div className="min-w-[200px] border-l-[4px] border-red bg-white p-5 text-blue">
+      <h4 className="font-kanit mb-1 text-3xl font-semibold">
         {animatedNumber}
-        <span className="ml-1 text-lg font-medium text-gray-500">
-          {suffixPart}
+        <span
+          className={`ml-1 ${suffix === "+"
+              ? "font-kanit text-3xl font-semibold"
+              : "text-lg font-medium text-gray-500"
+            }`}
+        >
+          {suffix}
         </span>
       </h4>
 
-      <p className="font-lato text-sm font-medium text-gray-600">
+      <p className="font-lato text-sm font-medium">
         {statistic?.text[currentLang]}
       </p>
     </div>
