@@ -86,6 +86,7 @@ export default function Navbar() {
         { title: "Kuwait", href: "/regions/kuwait" },
         { title: "UAE", href: "/regions/auh" },
         { title: "KSA", href: "/regions/ksa" },
+        { title: "Bahrain", href: "/regions/bahrain" },
       ],
     },
     { title: t("nav.careers"), href: "/careers" },
