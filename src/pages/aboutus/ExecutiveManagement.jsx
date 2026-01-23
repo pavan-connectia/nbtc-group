@@ -3,6 +3,7 @@ import { message } from "@/assets";
 import { Heading, Img, MaxContainer, Hero, Head } from "@/components";
 import { useGetAboutusQuery } from "@/redux/api/aboutusApi";
 import { useTranslation } from "react-i18next";
+import { useGetBannerImagesQuery } from "@/redux/api/bannerApi";
 
 const ExecutiveManagement = () => {
   const { t, i18n } = useTranslation();
@@ -10,6 +11,7 @@ const ExecutiveManagement = () => {
 
   const currentLang = i18n.language === "ar" ? "ar" : "en";
   const aboutusData = data?.data || {};
+   const { data:banner, isLoading } = useGetBannerImagesQuery();
 
   return (
     <>
@@ -22,7 +24,7 @@ const ExecutiveManagement = () => {
         keywords={data?.data?.seo?.metaKeywords}
       />
       <Hero
-        src={message}
+        src={`${import.meta.env.VITE_API_BASE_URL}/${banner?.data?.executiveManagement?.image}`}
         heading={t("nav.about.submenu.executiveManagement")}
       />
 

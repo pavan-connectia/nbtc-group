@@ -6,6 +6,7 @@ import ProjectsCard from "@/components/projects/ProjectsCard";
 import { useGetProjectsByDepartmentQuery } from "@/redux/api/projectsApi";
 import { useTranslation } from "react-i18next";
 import { useGetNavbarItemsQuery } from "@/redux/api/coreBusinessApi";
+import { useGetBannerImagesQuery } from "@/redux/api/bannerApi";
 
 const Projects = () => {
   const { t, i18n } = useTranslation();
@@ -14,6 +15,7 @@ const Projects = () => {
   const { data } = useGetProjectsByDepartmentQuery(name);
   const [pageHeading, setPageHeading] = useState();
   const currentLang = i18n.language === "ar" ? "ar" : "en";
+  const { data:banner, isLoading } = useGetBannerImagesQuery();
 
   const options = [
     { key: "kuwait", label: `kuwait` },
@@ -44,7 +46,7 @@ const Projects = () => {
         ogImage={data?.data?.seo?.ogImage}
         keywords={data?.dat?.seo?.metaKeywords}
       />
-      <Hero src={projectsImg} heading={pageHeading?.name?.[currentLang]} />
+      <Hero src={`${import.meta.env.VITE_API_BASE_URL}/${banner?.data?.project?.image}`} heading={pageHeading?.name?.[currentLang]} />
 
       <MaxContainer className="max-w-[1200px] px-3">
         <Heading variant="big" className="pb-6 pt-10 uppercase">

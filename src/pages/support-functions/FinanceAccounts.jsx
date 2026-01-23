@@ -13,7 +13,7 @@ const FinanceAccounts = () => {
 
   return (
     <>
-      <Hero src={qhse} heading={t("nav.supportServices.title")} />
+      
 
       <MaxContainer className="max-w-[1200px] px-5 py-10 sm:py-12 md:py-16">
         <Heading variant="big" className="pb-10 uppercase">

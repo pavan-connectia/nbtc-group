@@ -20,11 +20,9 @@ const Regions = () => {
 
   const currentLang = i18n.language === "ar" ? "ar" : "en";
 
-  // Filter projects belonging to this region
+
   const fltrProj = projects?.data?.filter((p) => p.region === id);
 
-  // Prepare the slider data
-  // Logic: Use the slider array if it exists; otherwise, fallback to the single image/name
   const heroSlides = data?.data?.slider?.length > 0 
     ? data.data.slider.map((slide) => ({
         image: slide.image,
@@ -47,7 +45,6 @@ const Regions = () => {
         ogImage={data?.data?.seo?.ogImage}
         keywords={data?.data?.seo?.metaKeywords}
       />
-
 
       <RegionHeroSlider
         dynamic 

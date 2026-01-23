@@ -17,6 +17,7 @@ import {
 } from "../redux/api/careersApi";
 import { useTranslation } from "react-i18next";
 import useClickOutside from "../hooks/useClickOutside";
+import { useGetBannerImagesQuery } from "@/redux/api/bannerApi";
 
 const Career = () => {
   const { t, i18n } = useTranslation();
@@ -24,6 +25,8 @@ const Career = () => {
   const [showNotice, setShowNotice] = useState(false);
   const { data: careerOpening } = useGetCareersOpeningQuery();
   const { data } = useGetCareersInfoQuery();
+  const { data:banner, isLoading } = useGetBannerImagesQuery();
+  
   const currentLang = i18n.language === "ar" ? "ar" : "en";
 
   useClickOutside(imgRef, () => setShowNotice(false));
@@ -38,7 +41,7 @@ const Career = () => {
         ogImage={data?.data?.seo?.ogImage}
         keywords={data?.data?.seo?.metaKeywords}
       />
-      <Hero src={careerImg} heading={t("nav.careers")} />
+      <Hero src={`${import.meta.env.VITE_API_BASE_URL}/${banner?.data?.career?.image}`} heading={t("nav.careers")} />
 
       <MaxContainer className="max-w-[1200px] px-5 py-10 sm:py-12 md:py-16">
         <Heading variant="big" className="pb-10 uppercase text-red">
