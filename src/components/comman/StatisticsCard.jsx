@@ -16,6 +16,16 @@ const StatisticsCard = ({ statistic }) => {
 
   const totalNumber = numberMatch ? parseFloat(numberMatch[0]) : 0;
 
+   const decimalPlaces = numberMatch?.[0]?.includes(".") ? 1 : 0;
+
+  const numberFormatter = new Intl.NumberFormat(
+    currentLang === "ar" ? "ar-EG" : "en-US",
+    {
+      minimumFractionDigits: decimalPlaces,
+      maximumFractionDigits: decimalPlaces,
+    }
+  );
+
   useEffect(() => {
     if (totalNumber <= 0) {
       setAnimatedNumber(0);
@@ -49,9 +59,11 @@ const StatisticsCard = ({ statistic }) => {
   }, [totalNumber]);
 
   return (
-    <div className="min-w-[200px] border-l-[4px] border-red bg-white p-5 text-blue">
-      <h4 className="font-kanit mb-1 text-3xl font-semibold">
-        {animatedNumber}
+    <div className="min-w-[180px] md:min-w-[200px] border-l-[4px] border-red bg-white p-5 text-blue">
+      <h4 className="flex items-baseline font-kanit font-semibold text-3xl mb-1">
+        <span className="tabular-nums">
+          {numberFormatter.format(animatedNumber)}
+        </span>
         <span
           className={`ml-1 ${suffix === "+"
               ? "font-kanit text-3xl font-semibold"

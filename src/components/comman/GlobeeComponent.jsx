@@ -8,6 +8,45 @@ import Img from "../ui/Img";
 import direction from "@/assets/icons/direction.svg";
 import Paragraph from "../ui/Paragraph";
 
+const locations = [
+  {
+    title: "USA",
+    location: "United States of America",
+    top: "38%",
+    left: "8.6%",
+  },
+  {
+    title: "Kuwait",
+    location: "Kuwait",
+    top: "43%",
+    left: "60%",
+  },
+  {
+    title: "KSA",
+    location: "Kingdom of Saudi Arabia",
+    top: "43%",
+    left: "58%",
+  },
+  {
+    title: "Bahrain",
+    location: "Bahrain",
+    top: "45.5%",
+    left: "60%",
+  },
+  {
+    title: "Uae",
+    location: "United Arab Emirates",
+    top: "47%",
+    left: "62.5%",
+  },
+  {
+    title: "India",
+    location: "India",
+    top: "55%",
+    left: "70%",
+  },
+];
+
 
 export default function GlobeComponent({
   markers,
@@ -91,8 +130,8 @@ export default function GlobeComponent({
         />
       </div> */}
 
-      <div className="relative inline-block w-[350px] sm:w-[550px] md:w-[750px] overflow-hidden">
-        <img
+      <div className="relative inline-block w-[335px] sm:w-[550px] md:w-[588px] overflow-hidden">
+        <Img
           src="/globalmap.jpeg"
           className="
       w-full
@@ -101,11 +140,12 @@ export default function GlobeComponent({
       cursor-zoom-in
     "
         />
+
       </div>
 
 
       {selectedLocation && (
-        <div className="absolute left-5 top-10 flex max-w-[320px] justify-between gap-5 rounded border bg-white p-4 shadow-lg">
+        <div className="absolute left-5 top-10 flex max-w-[320px] justify-between gap-5 rounded border  p-4 shadow-lg">
           <div>
             <Heading
               children={selectedLocation.location}

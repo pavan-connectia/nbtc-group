@@ -13,7 +13,7 @@
       }
     },
     "coreBusiness": {
-      "title": "Core Business",
+      "title": "Business Units",
       "submenu": {
         "engineeringConstruction": "Engineering & Construction Service",
         "logisticsHeavyLifting": "Logistics & Heavy Lifting"

@@ -33,6 +33,7 @@ import { regionApi } from "./api/regionApi";
 import { supportServiceApi } from "./api/supportServiceApi";
 import { uploadApi } from "./api/uploadApi";
 import { bannerApi } from "./api/bannerApi";
+import { loginURLApi } from "./api/LoginURLApi";
 
 const layoutPersistConfig = {
   key: "layoutDirection",
@@ -67,7 +68,8 @@ export const store = configureStore({
     [regionApi.reducerPath]: regionApi.reducer,
     [supportServiceApi.reducerPath]: supportServiceApi.reducer,
     [uploadApi.reducerPath]: uploadApi.reducer,
-    [bannerApi.reducerPath] : bannerApi.reducer
+    [bannerApi.reducerPath] : bannerApi.reducer,
+    [loginURLApi.reducerPath]:loginURLApi.reducer
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -95,7 +97,8 @@ export const store = configureStore({
       .concat(regionApi.middleware)
       .concat(supportServiceApi.middleware)
       .concat(uploadApi.middleware)
-      .concat(bannerApi.middleware),
+      .concat(bannerApi.middleware)
+      .concat(loginURLApi.middleware)
 });
 
 export const persistor = persistStore(store);

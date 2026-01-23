@@ -121,17 +121,11 @@ export default function Navbar() {
               <img src="/logo.png" alt="Logo" className="w-[200px] object-contain" />
             </Link>
 
-            {!isSticky && (
-              <HyperLink
-                children={t("home.employee_login")}
-                icon={<MdLockOutline />}
-                variant="filled"
-                href={import.meta.env.VITE_URL_ADMIN_PAGE}
-                className="my-auto h-fit rtl:flex-row-reverse z-50"
-                target="_blank"
-                rel="noopener noreferrer"
-              />
-            )}
+           
+              <div className="relative hidden items-center justify-between rounded-md bg-transparent px-3 py-1.5 text-textGray lg:flex">
+                <LanguageToggle />
+              </div>
+           
 
             <button onClick={() => setMenuOpen(!menuOpen)} className="lg:hidden z-50">
               <LuMenu size={20} className="text-white" />
@@ -257,7 +251,7 @@ function DesktopMenu({ nav, activeMenu, setActiveMenu }) {
   const { t } = useTranslation();
 
   return (
-    <nav className="font-kanit relative z-50 hidden w-full items-center gap-1 px-3 lg:flex">
+    <nav className="font-kanit relative z-50 hidden w-full items-center gap-1 px-3 pb-2 lg:flex">
       <div className="flex w-full items-center justify-between">
         {nav.map((item, idx) => (
           <div

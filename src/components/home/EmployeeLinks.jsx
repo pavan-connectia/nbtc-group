@@ -1,12 +1,16 @@
 import React from "react";
-import { employee2, employees } from "@/assets";
+import employee2 from "@/assets/home/emplyoee-2.webp";
+import employees from "@/assets/home/employees.webp";
 import { HyperLink, Img, Paragraph } from "../";
 import { LuArrowRight } from "react-icons/lu";
 import { MdLockOutline } from "react-icons/md";
 import { useTranslation } from "react-i18next";
+import { useGetLoginURLByDeptIdQuery } from "@/redux/api/LoginURLApi";
 
 const EmployeeLinks = () => {
   const { t } = useTranslation();
+  const { data } = useGetLoginURLByDeptIdQuery();
+  const url = data?.data?.departmentLoginUrl;
 
   return (
     <div className="flex h-[28rem] w-full overflow-hidden">
@@ -35,7 +39,7 @@ const EmployeeLinks = () => {
             <HyperLink
               children={t("home.explore_careers")}
               icon={<LuArrowRight className="rtl:rotate-180" />}
-              href="/careers"
+              href="careers"
               variant={"filled"}
               className={"my-auto h-fit bg-blue rtl:flex-row-reverse"}
             />
@@ -50,13 +54,12 @@ const EmployeeLinks = () => {
             <HyperLink
               children={t("home.employee_login")}
               icon={<MdLockOutline />}
-              variant="filled"
-              href={import.meta.env.VITE_URL_ADMIN_PAGE}   
-              className="my-auto h-fit rtl:flex-row-reverse"
-              target="_blank"                 
-              rel="noopener noreferrer"       
+              variant={"filled"}
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={"my-auto h-fit rtl:flex-row-reverse"}
             />
-
           </div>
         </div>
       </div>
