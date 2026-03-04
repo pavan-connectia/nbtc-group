@@ -11,7 +11,7 @@ const HomeStatistics = () => {
   const statistics = data?.data?.statistics || [];
 
   return (
-       <Swiper
+    <Swiper
       modules={[Autoplay]}
       spaceBetween={20}
       slidesPerView={2}
