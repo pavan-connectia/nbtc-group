@@ -11,8 +11,10 @@ import { useTranslation } from "react-i18next";
 const CareerForm = () => {
   const { t, i18n } = useTranslation();
   const { data } = useGetCareersOpeningQuery();
-  const [uploadResume] = usePostUploadMutation();
-  const [postCareerForm] = usePostCareersFormMutation();
+  const [uploadResume, { isLoading: isUploading }] = usePostUploadMutation();
+  const [postCareerForm, { isLoading: isPosting }] = usePostCareersFormMutation();
+
+  const isSubmitting = isUploading || isPosting;
 
   const currentLang = i18n.language === "ar" ? "ar" : "en";
 
@@ -284,10 +286,11 @@ const CareerForm = () => {
           />
 
           <Button
-            text="Apply for job"
+            text={isSubmitting ? "Submitting..." : "Apply for job"}
             type="submit"
-            className="col-span-full rounded-md uppercase"
+            className={`col-span-full rounded-md uppercase ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
             variant="primary"
+            disabled={isSubmitting}
           />
         </div>
       </form>

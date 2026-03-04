@@ -52,13 +52,13 @@ const CoreBusiness = () => {
               text={data?.data[0]?.description[currentLang]}
             />
 
-            <HyperLink
+           {/* <HyperLink
               href={data?.data[0]?.learnMore}
               className={"bg-red text-white"}
               icon={<LuArrowRight className="rtl:rotate-180" />}
             >
               {t("home.learn_more")}
-            </HyperLink>
+            </HyperLink> */}
           </div>
           <div className="scrollbar-hide absolute top-[40rem] z-40 mx-auto flex w-full max-w-[1280px] justify-between gap-5 overflow-x-auto px-10">
             {data?.data[0]?.statistics?.map((s, idx) => (
