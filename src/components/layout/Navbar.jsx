@@ -41,7 +41,7 @@ export default function Navbar() {
         { title: t("nav.about.submenu.chairmanMsg"), href: "/about/chairman-msg" },
         { title: t("nav.about.submenu.mdMsg"), href: "/about/md-msg" },
         { title: t("nav.about.submenu.executiveManagement"), href: "/about/executive-management" },
-        { title: t("nav.about.submenu.qualifications"), href: "/about/qualifications" },
+        // { title: t("nav.about.submenu.qualifications"), href: "/about/qualifications" },
         { title: t("nav.about.submenu.subsidiaries"), href: "/about/subsidiary" },
       ],
     },

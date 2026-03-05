@@ -24,7 +24,7 @@ const HomeProjects = () => {
   return (
     <div className="bg-white p-5 md:px-8 md:py-10">
       <MaxContainer className="max-w-[1200px] space-y-4">
-        <Heading variant="small">{t("home.our_works")}</Heading>
+        {/* <Heading variant="small">{t("home.our_works")}</Heading> */}
         <Heading variant="big">{t("home.our_projects")}</Heading>
 
         <div className="flex items-center justify-center gap-x-3 pt-3">
