@@ -6,7 +6,6 @@ import HyperLink from "../ui/HyperLink";
 import LanguageToggle from "./LanguageToggle";
 import { useTranslation } from "react-i18next";
 import { useGetNavbarItemsQuery } from "@/redux/api/coreBusinessApi";
-import { MdLockOutline } from "react-icons/md";
 
 export default function Navbar() {
   const location = useLocation();
@@ -16,6 +15,10 @@ export default function Navbar() {
   const [activeMobileMenu, setActiveMobileMenu] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSticky, setIsSticky] = useState(false);
+  
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
   const sideBarRef = useRef(null);
   const currentLang = i18n.language === "ar" ? "ar" : "en";
 
@@ -41,7 +44,6 @@ export default function Navbar() {
         { title: t("nav.about.submenu.chairmanMsg"), href: "/about/chairman-msg" },
         { title: t("nav.about.submenu.mdMsg"), href: "/about/md-msg" },
         { title: t("nav.about.submenu.executiveManagement"), href: "/about/executive-management" },
-        // { title: t("nav.about.submenu.qualifications"), href: "/about/qualifications" },
         { title: t("nav.about.submenu.subsidiaries"), href: "/about/subsidiary" },
       ],
     },
@@ -92,13 +94,35 @@ export default function Navbar() {
   ];
 
   const handleScroll = () => {
-    setIsSticky(window.scrollY > 200);
+    const currentScrollY = window.scrollY;
+
+    if (currentScrollY > 200) {
+      setIsSticky(true);
+    } else {
+      setIsSticky(false);
+    }
+
+
+    if (currentScrollY > lastScrollY) {
+    
+      setIsVisible(false);
+    } else {
+      
+      setIsVisible(true);
+    }
+
+    
+    if (currentScrollY < 50) {
+      setIsVisible(true);
+    }
+
+    setLastScrollY(currentScrollY);
   };
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [lastScrollY]); 
 
   const isTransparent =
     location.pathname === "/" ||
@@ -106,57 +130,43 @@ export default function Navbar() {
 
   return (
     <header
-      className={`z-50 w-full p-3 lg:p-5 ${!isTransparent ? "bg-blue/90" : "absolute top-0 bg-transparent"
-        }`}
+      className={`z-50 w-full p-3 lg:p-5 ${
+        !isTransparent ? "bg-blue/90" : "absolute top-0 bg-transparent"
+      }`}
     >
-      {/* Fixed wrapper for sticky navbar */}
-      <div className={`${isSticky ? "fixed left-0 top-0 z-40 w-full bg-blue/90 shadow-lg" : ""}`}>
-        <div
-          className={`mx-auto max-w-[1280px] ${isSticky ? "p-4 lg:p-5" : ""}`}
-        >
-          {/* Top row with logo and login */}
-          <div className="flex items-center justify-between p-0 md:pb-4">
-            <Link to="/" aria-label="logo" className="shrink-0 z-50">
+
+      <div
+        className={`transition-transform duration-300 ease-in-out ${
+          isSticky ? "fixed left-0 top-0 z-40 w-full bg-blue/90 shadow-lg" : ""
+        } ${isVisible ? "translate-y-0" : "-translate-y-full"}`}
+      >
+        <div className={`mx-auto max-w-[1280px] ${isSticky ? "p-3" : ""}`}>
+          <div className="flex items-center justify-between">
+            <Link to="/" aria-label="logo" className="z-50 shrink-0">
               <img src="/logo.png" alt="Logo" className="w-[200px] object-contain" />
             </Link>
 
-           
-              <div className="relative hidden items-center justify-between rounded-md bg-transparent px-3 py-1.5 text-textGray lg:flex">
-                <LanguageToggle />
-              </div>
-           
+            <div className="relative hidden items-center justify-between rounded-md bg-transparent px-3 py-1.5 text-textGray lg:flex">
+              <LanguageToggle />
+            </div>
 
-            <button onClick={() => setMenuOpen(!menuOpen)} className="lg:hidden z-50">
+            <button onClick={() => setMenuOpen(!menuOpen)} className="z-50 lg:hidden">
               <LuMenu size={20} className="text-white" />
             </button>
           </div>
 
-          {/* Desktop Navigation - Only show when not sticky */}
-          {!isSticky && (
-            <DesktopMenu
-              nav={nav}
-              activeMenu={activeMenu}
-              setActiveMenu={setActiveMenu}
-            />
-          )}
+          <DesktopMenu
+            nav={nav}
+            activeMenu={activeMenu}
+            setActiveMenu={setActiveMenu}
+          />
         </div>
-        
-        {/* Sticky Navigation - Show when sticky */}
-        {isSticky && (
-          <div className="mx-auto max-w-[1280px]">
-            <DesktopMenu
-              nav={nav}
-              activeMenu={activeMenu}
-              setActiveMenu={setActiveMenu}
-            />
-          </div>
-        )}
       </div>
 
-      {/* MOBILE MENU */}
       <nav
-        className={`fixed top-0 z-[100] h-screen overflow-y-auto py-5 duration-700 lg:hidden ${menuOpen ? "right-0" : "-right-full"
-          } w-full max-w-[300px] bg-black`}
+        className={`fixed top-0 z-[100] h-screen overflow-y-auto py-5 duration-700 lg:hidden ${
+          menuOpen ? "right-0" : "-right-full"
+        } w-full max-w-[300px] bg-black`}
         ref={sideBarRef}
       >
         <div className="flex flex-col gap-5 py-5 text-sm">
@@ -181,62 +191,30 @@ export default function Navbar() {
                     className="flex w-full items-center py-2 pl-10 text-textGray"
                   >
                     {navItem.title}
-                    <LuChevronDown className={`ml-1.5 transition-transform ${activeMobileMenu === idx ? "rotate-180" : ""}`} />
+                    <LuChevronDown
+                      className={`ml-1.5 transition-transform ${
+                        activeMobileMenu === idx ? "rotate-180" : ""
+                      }`}
+                    />
                   </button>
-
                   {activeMobileMenu === idx && (
-                    <div className="absolute left-0 top-full z-[110] mt-2 w-full rounded-lg bg-black text-textGray shadow-lg">
-                      {navItem.submenu.map((sub, subIdx) => {
-                        const isCore = navItem.title === t("nav.coreBusiness.title");
-
-                        return isCore ? (
-                          subIdx < 5 ? (
-                            <NavLink
-                              key={subIdx}
-                              to={sub.href}
-                              onClick={() => setMenuOpen(false)}
-                              className="block py-3 pl-12 hover:bg-gray-800"
-                            >
-                              {sub.title}
-                            </NavLink>
-                          ) : (
-                            <a
-                              key={subIdx}
-                              href={sub.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="block py-3 pl-12 hover:bg-gray-800"
-                            >
-                              {sub.title}
-                            </a>
-                          )
-                        ) : (
-                          <NavLink
-                            key={subIdx}
-                            to={sub.href}
-                            onClick={() => setMenuOpen(false)}
-                            className="block py-3 pl-12 hover:bg-gray-800"
-                          >
-                            {sub.title}
-                          </NavLink>
-                        );
-                      })}
+                    <div className="bg-black text-textGray">
+                      {navItem.submenu.map((sub, subIdx) => (
+                        <NavLink
+                          key={subIdx}
+                          to={sub.href}
+                          onClick={() => setMenuOpen(false)}
+                          className="block py-3 pl-12 hover:bg-gray-800"
+                        >
+                          {sub.title}
+                        </NavLink>
+                      ))}
                     </div>
                   )}
                 </>
               )}
             </div>
           ))}
-
-          <Link
-            to="/contact"
-            onClick={() => setMenuOpen(false)}
-            className="ml-8 flex w-fit items-center gap-x-3 rounded border border-red px-3 py-1 text-red"
-          >
-            <span>{t("nav.contact_us")}</span>
-            <LuPhoneCall />
-          </Link>
-
           <div className="ml-8 mt-3">
             <LanguageToggle />
           </div>
@@ -278,39 +256,15 @@ function DesktopMenu({ nav, activeMenu, setActiveMenu }) {
             {item.submenu && activeMenu === idx && (
               <div className="absolute left-0 top-full z-[60] w-[20rem] pt-4">
                 <div className="rounded-lg bg-white shadow-xl">
-                  {item.submenu.map((sub, subIdx) => {
-                    const isCore = item.title === t("nav.coreBusiness.title");
-
-                    return isCore ? (
-                      subIdx < 5 ? (
-                        <NavLink
-                          key={subIdx}
-                          to={sub.href}
-                          className="block border-b border-gray-100 px-5 py-2.5 text-blue text-[0.9rem] hover:bg-gray-50 hover:border-l-4 hover:border-l-red transition-all"
-                        >
-                          {sub.title}
-                        </NavLink>
-                      ) : (
-                        <a
-                          key={subIdx}
-                          href={sub.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block border-b border-gray-100 px-5 py-2.5 text-blue text-[0.9rem] hover:bg-gray-50 hover:border-l-4 hover:border-l-red transition-all"
-                        >
-                          {sub.title}
-                        </a>
-                      )
-                    ) : (
-                      <NavLink
-                        key={subIdx}
-                        to={sub.href}
-                        className="block border-b border-gray-100 px-5 py-2.5 text-blue text-[0.9rem] hover:bg-gray-50 hover:border-l-4 hover:border-l-red transition-all"
-                      >
-                        {sub.title}
-                      </NavLink>
-                    );
-                  })}
+                  {item.submenu.map((sub, subIdx) => (
+                    <NavLink
+                      key={subIdx}
+                      to={sub.href}
+                      className="block border-b border-gray-100 px-5 py-2.5 text-blue text-[0.9rem] hover:bg-gray-50 hover:border-l-4 hover:border-l-red transition-all"
+                    >
+                      {sub.title}
+                    </NavLink>
+                  ))}
                 </div>
               </div>
             )}

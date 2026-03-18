@@ -15,11 +15,9 @@ export default function CompanyTimeline() {
 
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Refs for Desktop
   const scrollContainerRef = useRef(null);
   const itemRefs = useRef([]);
 
-  // Refs for Mobile
   const mobileScrollRef = useRef(null);
   const mobileItemRefs = useRef([]);
 
@@ -31,12 +29,10 @@ export default function CompanyTimeline() {
     return () => clearInterval(timer);
   }, [MILESTONES.length]);
 
-  // AUTO-SCROLL LOGIC
   useEffect(() => {
     const isMobile = window.innerWidth < 768;
 
     if (isMobile) {
-      // MOBILE: Improved Centering Logic
       const activeItem = mobileItemRefs.current[activeIndex];
       if (activeItem) {
         activeItem.scrollIntoView({
@@ -46,14 +42,12 @@ export default function CompanyTimeline() {
         });
       }
     } else {
-      // DESKTOP: Vertical scroll logic (Untouched)
       const container = scrollContainerRef.current;
       const activeItem = itemRefs.current[activeIndex];
       if (activeItem && container) {
         const scrollPosition =
           activeItem.offsetTop -
-          (container.clientHeight / 2) +
-          (activeItem.clientHeight / 2);
+          (container.clientHeight / 2);
         container.scrollTo({ top: scrollPosition, behavior: 'smooth' });
       }
     }
@@ -71,13 +65,11 @@ export default function CompanyTimeline() {
         {t("home.our_milestones")}
       </Heading>
 
-      {/* MOBILE VIEW */}
       <div className="block md:hidden bg-white overflow-hidden">
 
-        {/* Scrollable Year Navigation */}
         <div
           ref={mobileScrollRef}
-          className="relative flex overflow-x-auto no-scrollbar pt-10 pb-12" // Increased bottom padding for year labels
+          className="relative flex overflow-x-auto scrollbar-hide pt-10 pb-12" 
         >
           <div className="flex items-center px-[50vw]">
             {MILESTONES.map((item, idx) => {
@@ -89,10 +81,9 @@ export default function CompanyTimeline() {
                 <div
                   key={item._id}
                   ref={(el) => (mobileItemRefs.current[idx] = el)}
-                  className="flex items-center"
+                  className="flex items-center "
                 >
                   <div className="flex flex-col items-center relative">
-                    {/* Dot */}
                     <div
                       onClick={() => setActiveIndex(idx)}
                       className="w-3.5 h-3.5 rounded-full cursor-pointer transition-colors duration-500 z-10 relative"
@@ -101,7 +92,6 @@ export default function CompanyTimeline() {
                       }}
                     />
 
-                    {/* Year Label */}
                     <span
                       className={`absolute top-6 text-sm font-bold transition-all duration-300 min-w-[60px] text-center z-30 ${isActive ? "text-black scale-110" : "text-gray-400"
                         }`}
@@ -110,7 +100,6 @@ export default function CompanyTimeline() {
                     </span>
                   </div>
 
-                  {/* Connector Line */}
                   {!isLast && (
                     <div className="w-20 h-[4px] bg-gray-200">
                       {isActive && (
@@ -131,8 +120,7 @@ export default function CompanyTimeline() {
           </div>
         </div>
 
-        {/* Mobile Content Area with spacing fix */}
-        <div className="px-6 mt-10"> {/* Added px-6 for side spacing and mt-10 for top spacing */}
+        <div className="px-6 mt-10">
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
@@ -147,7 +135,6 @@ export default function CompanyTimeline() {
 
               <div
                 className=" space-y-3 mb-8
-  text-gray-500 
     leading-relaxed 
     text-sm md:text-base 
     max-w-sm
@@ -176,7 +163,6 @@ export default function CompanyTimeline() {
         </div>
       </div>
 
-      {/* DESKTOP VIEW: COMPLETELY UNTOUCHED */}
       <div className="hidden md:flex flex-col md:flex-row h-screen w-full overflow-hidden bg-white">
         <div className="relative w-full md:w-1/2 h-1/2 md:h-full overflow-hidden flex items-center justify-center">
           <AnimatePresence mode="wait">
@@ -191,19 +177,12 @@ export default function CompanyTimeline() {
 
         <div
           ref={scrollContainerRef}
-          className="relative w-full md:w-1/2 h-1/2 md:h-full overflow-y-auto no-scrollbar bg-white"
-          style={{
-            backgroundColor: '#ffffff',
-            backgroundImage: `
-              repeating-linear-gradient(45deg, rgba(0,0,0,0.04) 0px, rgba(0,0,0,0.04) 1px, transparent 1px, transparent 120px),
-              repeating-linear-gradient(-45deg, rgba(0,0,0,0.04) 0px, rgba(0,0,0,0.04) 1px, transparent 1px, transparent 120px),
-              repeating-linear-gradient(0deg, rgba(0,0,0,0.04) 0px, rgba(0,0,0,0.04) 1px, transparent 1px, transparent 104px)
-            `,
-            backgroundPosition: 'center',
-          }}
+          className="relative w-full md:w-1/2 h-1/2 md:h-full overflow-y-auto scrollbar-hide bg-white isometric-bg"
+ 
         >
           <div className="pointer-events-none sticky top-0 h-24 w-full bg-gradient-to-b from-white to-transparent z-10" />
-          <div className="max-w-lg  relative z-20">
+           <div className="pointer-events-none absolute left-0 top-0 h-full w-32 bg-gradient-to-r from-white via-white/80 to-transparent z-80" />
+          <div className="max-w-lg  relative z-50 " >
             {MILESTONES.map((item, index) => {
               const isActive = index === activeIndex;
               const isPast = index < activeIndex;
@@ -247,18 +226,16 @@ export default function CompanyTimeline() {
                           <h3 className="text-[#ef4444] font-semibold text-lg mb-2">{item.title[currentLang]}</h3>
                           <div
                             className="
-    text-gray-500 
-    leading-relaxed 
-    text-sm md:text-base 
-    max-w-sm
-    [&>ul]:list-disc
-    [&>ul]:pl-5
-    [&>ul]:space-y-2
-    [&>ol]:list-decimal
-    [&>ol]:pl-5
-    [&>ol]:space-y-2
-    [&>p]:mb-3
-  "
+                                      leading-relaxed 
+                                      text-sm md:text-base 
+                                      max-w-lg
+                                      [&>ul]:list-disc
+                                      [&>ul]:pl-5
+                                      [&>ul]:space-y-2
+                                      [&>ol]:list-decimal
+                                      [&>ol]:pl-5
+                                      [&>ol]:space-y-2
+                                      [&>p]:mb-1"
                             dangerouslySetInnerHTML={{
                               __html: item.description[currentLang]
                             }}
@@ -271,7 +248,7 @@ export default function CompanyTimeline() {
               );
             })}
           </div>
-          <div className="pointer-events-none sticky bottom-0 h-24 w-full bg-gradient-to-t from-white to-transparent z-10" />
+     
         </div>
       </div>
     </div>
